@@ -1,7 +1,8 @@
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
-const uri = "mongodb+srv://Andybusiness:z2YDj4voUSKUjnqO@andybusinessdb.kpcvirh.mongodb.net/?appName=AndyBusinessDB";
-const dbName = "AndyBusinessDB";
+const uri = process.env.MONGODB_URI;
+const dbName = process.env.MONGODB_DB_NAME;
 
 async function main() {
     const client = new MongoClient(uri);
