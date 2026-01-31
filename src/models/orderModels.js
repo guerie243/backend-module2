@@ -32,7 +32,7 @@ const OrderModel = {
     },
 
     findByVitrineId: async (vitrineId) => {
-        return await OrderModel.getCollection().find({ vitrineId }).toArray();
+        return await OrderModel.getCollection().find({ vitrineId }).sort({ createdAt: -1 }).toArray();
     },
 
     findAll: async () => {

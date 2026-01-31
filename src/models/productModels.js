@@ -54,8 +54,13 @@ const ProductModel = {
         return await ProductModel.getCollection().findOne({ slug: slug });
     },
 
-    findByVitrineId: async (vitrineId) => {
-        return await ProductModel.getCollection().find({ vitrineId: vitrineId }).toArray();
+    findByVitrineId: async (vitrineId, skip = 0, limit = 20) => {
+        return await ProductModel.getCollection()
+            .find({ vitrineId: vitrineId })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .toArray();
     },
 
     isSlugUnique: async (slug) => {
@@ -68,8 +73,13 @@ const ProductModel = {
         return count === 0;
     },
 
-    findAll: async () => {
-        return await ProductModel.getCollection().find({}).toArray();
+    findAll: async (skip = 0, limit = 20) => {
+        return await ProductModel.getCollection()
+            .find({})
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .toArray();
     }
 };
 

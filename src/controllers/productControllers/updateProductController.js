@@ -11,6 +11,15 @@ const updateProductController = async (req, res) => {
             return res.status(400).json({ success: false, message: "Aucune donnée fournie." });
         }
 
+        // Parse locations if it's a JSON string (from FormData)
+        if (updates.locations && typeof updates.locations === 'string') {
+            try {
+                updates.locations = JSON.parse(updates.locations);
+            } catch (e) {
+                console.warn('[updateProduct] Failed to parse locations as JSON, using as-is');
+            }
+        }
+
         const product = await updateProductService(id, updates);
 
         // 🔄 Synchronisation des champs spécifiques (prix, catégorie, lieux)

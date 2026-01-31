@@ -5,10 +5,20 @@ const { invalidateProductsCache } = require('../../utils/cache');
 const createProductController = async (req, res) => {
     try {
         // Validation des données primaires
-        const { vitrineId, name, description, price, category, slug, currency, deliveryFee } = req.body;
+        const { vitrineId, name, description, price, category, slug, currency, deliveryFee, locations } = req.body;
 
         // Gestion des images (gérée par l'intercepteur)
         const images = req.body.images || [];
+
+        // Parse locations if it's a JSON string (from FormData)
+        let parsedLocations = locations;
+        if (typeof locations === 'string') {
+            try {
+                parsedLocations = JSON.parse(locations);
+            } catch (e) {
+                console.warn('[createProduct] Failed to parse locations as JSON, using as-is');
+            }
+        }
 
         console.log(`[createProduct] Tentative création pour vitrine: ${vitrineId}, nom: ${name}, catégorie: ${category}`);
 
@@ -18,6 +28,14 @@ const createProductController = async (req, res) => {
         if (!name || typeof name !== 'string' || name.trim().length === 0) {
             return res.status(400).json({ success: false, message: "Le nom du produit est obligatoire." });
         }
+
+        console.log(`[createProduct] Données finales avant service:`, {
+            vitrineId,
+            name,
+            price,
+            imagesCount: images.length,
+            imagesSample: images
+        });
 
         // Appel du service
         const product = await createProductService({
@@ -29,8 +47,11 @@ const createProductController = async (req, res) => {
             images,
             slug,
             currency,
-            deliveryFee: deliveryFee ? parseFloat(deliveryFee) : null
-        });
+            deliveryFee: deliveryFee ? parseFloat(deliveryFee) : null,
+            locations: parsedLocations || undefined
+        }, req.user?.userId, req.headers.authorization);
+
+        console.log(`[createProduct] Produit créé avec succès, ID: ${product._id || product.id}`);
 
         // 🔄 Synchronisation vers le Module 1 (Annonces)
         // On ne bloque pas la réponse si la synchro échoue, mais on log l'erreur.

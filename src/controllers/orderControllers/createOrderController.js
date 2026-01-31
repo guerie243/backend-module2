@@ -9,7 +9,7 @@ const { invalidateOrdersCache } = require('../../utils/cache');
  */
 const createOrderController = async (req, res) => {
     try {
-        const { vitrineId, products, clientName, clientPhone, deliveryAddress } = req.body;
+        const { vitrineId, products, clientName, clientPhone, deliveryAddress, gpsCoords } = req.body;
 
         // Validation basique des champs obligatoires
         if (!vitrineId || !products || !Array.isArray(products) || products.length === 0 || !clientName || !clientPhone || !deliveryAddress) {

@@ -13,6 +13,7 @@ const createOrderService = async (orderData) => {
         clientPhone,
         deliveryAddress,
         deliveryLocation,
+        gpsCoords,
         totalPrice,
         notes,
         ...otherData
@@ -32,7 +33,8 @@ const createOrderService = async (orderData) => {
         clientName,
         clientPhone,
         deliveryAddress,
-        deliveryLocation: deliveryLocation || null,
+        deliveryLocation: deliveryLocation || gpsCoords || null,
+        gpsCoords: gpsCoords || deliveryLocation || null,
         totalPrice: Number(totalPrice) || 0,
         notes: notes || null,
         status: orderData.status || 'pending',
