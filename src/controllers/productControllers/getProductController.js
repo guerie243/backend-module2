@@ -7,11 +7,8 @@ const getProductController = async (req, res) => {
         const { page, limit } = req.query;
 
         // Si slug est présent mais id ne l'est pas, 
-        // on vérifie si slug est un ID MongoDB valide
-        if (!id && slug && ObjectId.isValid(slug)) {
-            id = slug;
-            slug = undefined;
-        }
+        // on considère que slug peut être un ID si on ne trouve rien avec slug plus tard
+        // ou on le laisse passer tel quel pour que le service gère le fallback.
 
         const products = await getProductService({
             id,
