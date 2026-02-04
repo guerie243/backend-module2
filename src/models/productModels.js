@@ -42,12 +42,20 @@ const ProductModel = {
 
     findById: async (id) => {
         const { ObjectId } = require('mongodb');
-        let query = { _id: id };
-        try {
-            if (ObjectId.isValid(id)) query = { _id: new ObjectId(id) };
-        } catch (e) { }
 
-        return await ProductModel.getCollection().findOne(query);
+        // Try direct string match first (since we use custom string IDs like prod_...)
+        let product = await ProductModel.getCollection().findOne({ _id: id });
+
+        // If not found and looks like ObjectId, try as ObjectId
+        if (!product && id && ObjectId.isValid(id)) {
+            try {
+                product = await ProductModel.getCollection().findOne({ _id: new ObjectId(id) });
+            } catch (e) {
+                console.error('[ProductModel.findById] ObjectId error:', e);
+            }
+        }
+
+        return product;
     },
 
     findBySlug: async (slug) => {
