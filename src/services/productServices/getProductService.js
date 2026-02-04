@@ -10,7 +10,14 @@ const getProductService = async ({ id, slug, vitrineId, page = 1, limit = 20 }) 
         return await ProductModel.findById(id);
     }
     if (slug) {
-        return await ProductModel.findBySlug(slug);
+        let product = await ProductModel.findBySlug(slug);
+
+        // Fallback: Si le slug ressemble à un ID et qu'aucun produit n'est trouvé par slug
+        if (!product && slug.match(/^[0-9a-fA-F]{24}$/)) {
+            product = await ProductModel.findById(slug);
+        }
+
+        return product;
     }
 
     const skip = (parseInt(page) - 1) * parseInt(limit);

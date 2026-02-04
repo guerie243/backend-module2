@@ -1,9 +1,17 @@
 const getProductService = require('../../services/productServices/getProductService');
+const { ObjectId } = require('mongodb');
 
 const getProductController = async (req, res) => {
     try {
-        const { id, slug, vitrineId } = req.params;
+        let { id, slug, vitrineId } = req.params;
         const { page, limit } = req.query;
+
+        // Si slug est présent mais id ne l'est pas, 
+        // on vérifie si slug est un ID MongoDB valide
+        if (!id && slug && ObjectId.isValid(slug)) {
+            id = slug;
+            slug = undefined;
+        }
 
         const products = await getProductService({
             id,
@@ -17,8 +25,6 @@ const getProductController = async (req, res) => {
             return res.status(404).json({ success: false, message: "Product not found" });
         }
 
-        // Si c'est un produit unique, on le renvoie tel quel dans 'data'
-        // Si c'est une liste, elle est déjà dans 'products'
         res.status(200).json({ success: true, data: products });
     } catch (error) {
         console.error('[getProductController] Error:', error);
