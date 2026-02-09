@@ -25,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 // Import des routes
 const productRoutes = require('./src/routes/productRoutes');
 const commandRoutes = require('./src/routes/orderRoutes');
+const activityRoutes = require('./src/routes/activityRoutes');
 
 // Création d'un routeur API pour regrouper toutes les routes
 const apiRouter = express.Router();
@@ -32,6 +33,7 @@ const apiRouter = express.Router();
 // Connexion des routes au routeur API
 apiRouter.use('/products', productRoutes);
 apiRouter.use('/orders', commandRoutes);
+apiRouter.use('/activities', activityRoutes);
 
 // Montage du routeur API sur '/' et '/api'
 app.use('/', apiRouter);
@@ -45,6 +47,7 @@ app.get('/', (req, res) => {
         endpoints: {
             products: '/products',
             orders: '/orders',
+            activities: '/activities',
             health: '/health'
         }
     });
