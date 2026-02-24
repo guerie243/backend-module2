@@ -10,6 +10,7 @@ const createOrderController = require('../controllers/orderControllers/createOrd
 const updateOrderController = require('../controllers/orderControllers/updateOrderController');
 const getOrderByIdController = require('../controllers/orderControllers/getOrderByIdController');
 const getOrdersByVitrineController = require('../controllers/orderControllers/getOrdersByVitrineController');
+const deleteOrderController = require('../controllers/orderControllers/deleteOrderController');
 
 // @route   POST /api/orders
 // @desc    Create a new order
@@ -30,5 +31,10 @@ router.get('/:id', cacheMiddleware, getOrderByIdController);
 // @desc    Get orders by Vitrine ID
 // @access  Public
 router.get('/vitrine/:vitrineId', cacheMiddleware, getOrdersByVitrineController);
+
+// @route   DELETE /api/orders/:id
+// @desc    Delete an existing order
+// @access  Private (JWT)
+router.delete('/:id', authMiddleware, deleteOrderController);
 
 module.exports = router;

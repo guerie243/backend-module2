@@ -37,6 +37,10 @@ const OrderModel = {
 
     findAll: async () => {
         return await OrderModel.getCollection().find({}).toArray();
+    },
+
+    delete: async (orderId) => {
+        return await OrderModel.getCollection().deleteOne({ _id: orderId });
     }
 };
 
