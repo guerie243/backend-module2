@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 const productRoutes = require('./src/routes/productRoutes');
 const commandRoutes = require('./src/routes/orderRoutes');
 const activityRoutes = require('./src/routes/activityRoutes');
+const syncRoutes = require('./src/routes/syncRoutes');
 
 // Création d'un routeur API pour regrouper toutes les routes
 const apiRouter = express.Router();
@@ -34,6 +35,7 @@ const apiRouter = express.Router();
 apiRouter.use('/products', productRoutes);
 apiRouter.use('/orders', commandRoutes);
 apiRouter.use('/activities', activityRoutes);
+apiRouter.use('/sync', syncRoutes);
 
 // Montage du routeur API sur '/' et '/api'
 app.use('/', apiRouter);
